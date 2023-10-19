@@ -81,6 +81,23 @@ describe('Testing Users endpoint', () => {
       expect(body).toHaveProperty('data');
       expect(body.success).toBe(false);
     });
+
+    test("should can't create user unauthorized", async () => {
+      const name = 'usertest3';
+      const email = 'usertest312ai@mail.com';
+      const password = '12345187278172';
+      const { statusCode, body } = await request(app).post('/api/v1/users').send({
+        name,
+        email,
+        password,
+      });
+
+      expect(statusCode).toBe(401);
+      expect(body).toHaveProperty('success');
+      expect(body).toHaveProperty('message');
+      expect(body).toHaveProperty('data');
+      expect(body.success).toBe(false);
+    });
   });
 
   describe('Testing get All of users GET /api/v1/users endpoint', () => {
@@ -137,6 +154,24 @@ describe('Testing Users endpoint', () => {
     test("should can't update a user profile with invalid userId", async () => {
       const { statusCode, body } = await request(app).get(`/api/v1/users/${userTemp.id}123`).set('Authorization', `Bearer ${token}`);
       expect(statusCode).toBe(404);
+      expect(body).toHaveProperty('success');
+      expect(body).toHaveProperty('message');
+      expect(body).toHaveProperty('data');
+      expect(body.success).toBe(false);
+    });
+
+    test("should can't update a user unauthorized", async () => {
+      const identity_type = 'KTP';
+      const identity_number = '3418615371319391';
+      const address = 'Yogyakarta';
+
+      const { statusCode, body } = await request(app).put(`/api/v1/users/${userTemp.id}`).send({
+        identity_type,
+        identity_number,
+        address,
+      });
+
+      expect(statusCode).toBe(401);
       expect(body).toHaveProperty('success');
       expect(body).toHaveProperty('message');
       expect(body).toHaveProperty('data');

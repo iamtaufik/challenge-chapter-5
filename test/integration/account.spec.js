@@ -106,6 +106,27 @@ describe('Testing Accounts endpoint', () => {
       expect(body).toHaveProperty('data');
       expect(body.success).toBe(false);
     });
+
+    test("should can't create new account unauthorized", async () => {
+      const bank_name = 'BCA';
+      const bank_account_number = '1234567890';
+      const balance = 0;
+
+      const { statusCode, body } = await request(app)
+        .post('/api/v1/accounts')
+        .send({
+          user_id: Number(userTemp.id),
+          bank_name,
+          bank_account_number,
+          balance,
+        });
+
+      expect(statusCode).toBe(401);
+      expect(body).toHaveProperty('success');
+      expect(body).toHaveProperty('message');
+      expect(body).toHaveProperty('data');
+      expect(body.success).toBe(false);
+    });
   });
 
   describe('Testing get all of accounts GET /api/v1/accounts endpoint', () => {

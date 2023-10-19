@@ -104,6 +104,22 @@ describe('Testing Transactions endpoint', () => {
       expect(body).toHaveProperty('data');
       expect(body.success).toBe(false);
     });
+
+    test("should can't create new transaction unauthorized", async () => {
+      const { statusCode, body } = await request(app)
+        .post('/api/v1/transactions')
+        .send({
+          source_account_id: account1.id + 99,
+          destination_account_id: account2.id + 99,
+          amount: 100,
+        });
+
+      expect(statusCode).toBe(401);
+      expect(body).toHaveProperty('success');
+      expect(body).toHaveProperty('message');
+      expect(body).toHaveProperty('data');
+      expect(body.success).toBe(false);
+    });
   });
 
   describe('Testing get all of transaction GET /api/v1/transactions endpoint', () => {
