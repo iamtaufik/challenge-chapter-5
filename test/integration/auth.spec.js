@@ -56,6 +56,22 @@ describe('Testing Register POST /api/v1/auth/register endpoint', () => {
     expect(body).toHaveProperty('data');
     expect(body.success).toBe(false);
   });
+
+  test("should can't create user with invalid password length", async () => {
+    const name = 'usertest3';
+    const email = 'usertest3asas@mail.com';
+    const password = '12345';
+    const { statusCode, body } = await request(app).post('/api/v1/auth/register').send({
+      name,
+      email,
+      password,
+    });
+    expect(statusCode).toBe(400);
+    expect(body).toHaveProperty('success');
+    expect(body).toHaveProperty('message');
+    expect(body).toHaveProperty('data');
+    expect(body.success).toBe(false);
+  });
 });
 
 describe('Testing Login POST /api/v1/auth/login endpoint', () => {
